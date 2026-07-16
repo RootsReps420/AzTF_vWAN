@@ -1,0 +1,22 @@
+# Terraform working directories & provider binaries (large, machine-local)
+**/.terraform/*
+
+# State files — never commit; may contain secrets
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Variable files that may hold secrets
+*.tfvars
+*.tfvars.json
+!example.tfvars
+
+# CLI config / plan output
+.terraformrc
+terraform.rc
+*.tfplan
+
+# Keep the dependency lock file (.terraform.lock.hcl) tracked.
