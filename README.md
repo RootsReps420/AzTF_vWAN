@@ -1,0 +1,2 @@
+# TerraformShit
+Monorepo for Terraform.
