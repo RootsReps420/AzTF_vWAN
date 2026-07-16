@@ -1,0 +1,11 @@
+azure_subscription_id = "00000000-0000-0000-0000-000000000000"
+subscription_code     = "conn"
+environment           = "prod"
+location              = "uksouth"
+
+mandatory_tags = {
+  cost_centre         = "CC-4821"
+  owner               = "avd-platform@example.com"
+  data_classification = "Internal"
+  service_criticality = "Gold"
+}
