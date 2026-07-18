@@ -10,9 +10,11 @@
 module "hostpool_pooled" {
   source = "../.."
 
-  name                = "vdi-mult-pooled"
+  name                = "mult-pooled"
   resource_group_name = var.resource_group_name
   location            = "uksouth"
+  subscription_id     = "vdi"
+  environment         = "dev"
 
   host_pool_type           = "Pooled"
   load_balancer_type       = "DepthFirst"
@@ -24,9 +26,11 @@ module "hostpool_pooled" {
 module "hostpool_personal" {
   source = "../.."
 
-  name                = "vdi-mult-personal"
+  name                = "mult-personal"
   resource_group_name = var.resource_group_name
   location            = "uksouth"
+  subscription_id     = "vdi"
+  environment         = "dev"
 
   host_pool_type     = "Personal"
   load_balancer_type = "Persistent" # DepthFirst is not valid for Personal pools

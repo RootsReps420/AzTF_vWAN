@@ -1,5 +1,5 @@
 variable "name" {
-  description = "Base name for the host pool (e.g. \"vdi-mult-uks\"). Used to derive the host pool name (vdpool-<name>)."
+  description = "Descriptor for the host pool (e.g. \"vdi-mult-fin\"). Used as the description segment when generating the name via modules/naming."
   type        = string
 }
 
@@ -11,6 +11,26 @@ variable "resource_group_name" {
 variable "location" {
   description = "Azure region for the host pool."
   type        = string
+}
+
+# ---------------------------------------------------------------------------
+# Naming inputs — passed through to modules/naming
+# ---------------------------------------------------------------------------
+
+variable "subscription_id" {
+  description = "Subscription/landing-zone segment used to name the host pool (e.g. \"vdi\")."
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment segment used to name the host pool (e.g. \"dev\", \"prod\")."
+  type        = string
+}
+
+variable "unique_id" {
+  description = "Optional uniqueness/instance suffix used when naming the host pool (e.g. \"01\")."
+  type        = string
+  default     = ""
 }
 
 # ---------------------------------------------------------------------------
@@ -118,6 +138,12 @@ variable "start_vm_on_connect" {
   description = "When true, allows session hosts to be started on connect (requires the Start VM on Connect configuration on the pool's VMs)."
   type        = bool
   default     = false
+}
+
+variable "log_analytics_workspace_id" {
+  description = "Resource ID of the Log Analytics workspace (output law_id from modules/platform/management) to send host pool diagnostics to. When null, no diagnostic setting is created."
+  type        = string
+  default     = null
 }
 
 variable "tags" {

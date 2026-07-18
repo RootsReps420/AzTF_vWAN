@@ -8,41 +8,39 @@ resource name. **Every other module calls this** — names are never hardcoded.
 
 - Resolves the bank **abbreviation** for the given `resource_type`.
 - Resolves the **region short code** for the given `location`.
-- Selects the correct **naming pattern** for the resource family:
+- Selects the correct **naming pattern** for the resource family. Segment order
+  follows the TDA standard — **region first**:
 
-| Family | Pattern | Notes |
-|--------|---------|-------|
-| Default | `{abbr}-{sub}-{desc}-{env}-{region}-{uid}` | hyphenated |
-| Storage Account (`storage_account`, `fslogix_storage_account`) | `{abbr}{sub}{desc}{env}{region}{uid}` | lowercased, alphanumeric only, ≤ 24 chars |
-| Key Vault (`key_vault`) | `{abbr}-{sub}-{desc}-{env}-{region}-{uid}` | lowercased, ≤ 24 chars |
-| Managed Identity (`managed_identity`) | `{abbr}-{sub}-{desc}-{env}-{region}` | no unique-id segment |
+| Family | Pattern | Example |
+|--------|---------|---------|
+| Default | `{region}-{subscription}-{abbr}-{description}-{uid}` | `uks-conn-afw-hub01-01` |
+| Resource Group | default pattern, abbr `rsg` (TDA §9.1) | `uks-conn-rsg-global` |
+| Storage Account (`storage_account`, `fslogix_storage_account`, `blob_storage_account`) | `{region}{env}{abbr}{desc}{uid}` — lowercased, alphanumeric only, ≤ 24 chars (TDA §9.3) | `uksdevfsad78101` |
+| Key Vault (`key_vault`) | `{region}-{env}-kvt-{desc}-{uid}` — lowercased, ≤ 24 chars (TDA §11.1) | `uks-dev-kvt-vdi01a1` |
+| Managed Identity (`managed_identity`, `managed_user_id`) | `{subscription}-{env}-msi-{desc}-{uid}` (subscription = service, TDA §13.5) | `psv-pd1-msi-iam-01` |
+| Compute Gallery (`compute_gallery`) | underscore-joined (Azure disallows hyphens) | `uks_conn_gal_avd` |
 
 - **Fails `terraform plan`** with a clear, enumerated error if an unknown
   `resource_type` or `location` is passed (via `terraform_data` preconditions).
 
 Empty segments (e.g. an omitted `unique_id`) are dropped, so no double hyphens.
 
+## Pending TDA sign-off
+
+The following are included but **awaiting TDA approval** (LLD Open Items 1 & 2)
+and may change:
+
+- Region codes: `italynorth` → `itn`, `spaincentral` → `spc`
+- AVD abbreviations: `vdhp`, `vdws`, `vdag`, `vdsp`
+- Monitoring abbreviations: `dce`, `sqr`, `wkb`
+- `ip_group` → `ipg` (no TDA abbreviation defined — local convention)
+
 ## Abbreviations
 
-| Slug (`resource_type`) | Abbr | Slug | Abbr |
-|---|---|---|---|
-| `virtual_wan` | `vwn` | `key_vault` | `kvt` |
-| `virtual_hub` | `vhb` | `storage_account` | `sta` |
-| `virtual_hub_connection` | `vhc` | `fslogix_storage_account` | `fsa` |
-| `azure_firewall` | `afw` | `log_analytics_workspace` | `law` |
-| `firewall_policy` | `fwp` | `action_group` | `mag` |
-| `expressroute_gateway` | `erg` | `metric_alert` | `maa` |
-| `vpn_gateway` | `vpg` | `log_alert` | `mma` |
-| `virtual_network` | `net` | `defender_for_cloud` | `mdc` |
-| `network_security_group` | `nsg` | `compute_gallery` | `gal` |
-| `route_table` | `rte` | `image_definition` | `img` |
-| `network_watcher` | `ntw` | `managed_identity` | `msi` |
-| `resource_group` | `rsg` | `public_ip` | `pip` |
-| `application_security_group` | `asg` | | |
-
-> The abbreviation → meaning mapping for `mag` / `maa` / `mma` (monitoring
-> resources) should be confirmed against the authoritative TDA ARN v2 document;
-> adjust the `abbreviations` map in `main.tf` if the source standard differs.
+See the `abbreviations` map in [`main.tf`](main.tf) for the full, authoritative
+list (networking, storage, identity, observability, compute, AVD, structure).
+Corrected against TDA §5: `maa` = Monitor Activity Alert, `mma` = Monitor Metric
+Alert, `mdc` = Monitor Data Collection Rule.
 
 ### Regions
 
@@ -52,20 +50,19 @@ Empty segments (e.g. an omitted `unique_id`) are dropped, so no double hyphens.
 ## Usage
 
 ```hcl
-module "vnet_name" {
+module "firewall_name" {
   source = "../../naming"
 
-  resource_type   = "virtual_network"
+  resource_type   = "azure_firewall"
   location        = "uksouth"
   subscription_id = "conn"
-  environment     = "prod"
   description     = "hub01"
   unique_id       = "01"
 }
 
-# module.vnet_name.name         => "net-conn-hub01-prod-uks-01"
-# module.vnet_name.abbreviation => "net"
-# module.vnet_name.region_short => "uks"
+# module.firewall_name.name         => "uks-conn-afw-hub01-01"
+# module.firewall_name.abbreviation => "afw"
+# module.firewall_name.region_short => "uks"
 ```
 
 ## Inputs
@@ -73,10 +70,10 @@ module "vnet_name" {
 | Name | Description | Type | Default |
 |------|-------------|------|---------|
 | `resource_type` | Resource-type slug to name | `string` | — |
-| `location` | Azure region | `string` | — |
-| `subscription_id` | Short subscription / landing-zone code | `string` | — |
-| `environment` | Environment segment (`dev`/`prod`) | `string` | — |
-| `description` | Short workload/purpose descriptor | `string` | — |
+| `location` | Azure region (first name segment) | `string` | — |
+| `subscription_id` | Subscription segment (service short name for MSI) | `string` | `""` |
+| `environment` | Environment segment (KV/Storage/MSI patterns) | `string` | `""` |
+| `description` | Short workload/purpose descriptor | `string` | `""` |
 | `unique_id` | Optional instance suffix | `string` | `""` |
 
 ## Outputs

@@ -8,7 +8,21 @@
 # time_rotating resource so the token is re-issued automatically before it
 # lapses — pipelines always have a valid token without manual rotation and
 # without the perpetual-diff problem of timestamp()/timeadd().
+#
+# The host pool name comes from modules/naming (abbreviation vdhp — PENDING TDA
+# sign-off, LLD Open Item 2).
 # ---------------------------------------------------------------------------
+
+module "hostpool_name" {
+  source = "../../naming"
+
+  resource_type   = "avd_host_pool"
+  location        = var.location
+  subscription_id = var.subscription_id
+  environment     = var.environment
+  description     = var.name
+  unique_id       = var.unique_id
+}
 
 # Rotates on the configured cadence. When it rotates, a fresh expiration_date
 # flows into the registration info below and Azure mints a new token.
@@ -17,7 +31,7 @@ resource "time_rotating" "token" {
 }
 
 resource "azurerm_virtual_desktop_host_pool" "this" {
-  name                = "vdpool-${var.name}"
+  name                = module.hostpool_name.name
   resource_group_name = var.resource_group_name
   location            = var.location
 
@@ -45,4 +59,18 @@ resource "azurerm_virtual_desktop_host_pool" "this" {
 resource "azurerm_virtual_desktop_host_pool_registration_info" "this" {
   hostpool_id     = azurerm_virtual_desktop_host_pool.this.id
   expiration_date = time_rotating.token.rotation_rfc3339
+}
+
+# Diagnostic settings — stream host pool logs to the platform Log Analytics
+# workspace. Created only when a workspace id is supplied.
+resource "azurerm_monitor_diagnostic_setting" "hostpool" {
+  count = var.log_analytics_workspace_id != null ? 1 : 0
+
+  name                       = "diag-to-law"
+  target_resource_id         = azurerm_virtual_desktop_host_pool.this.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  enabled_log {
+    category_group = "allLogs"
+  }
 }

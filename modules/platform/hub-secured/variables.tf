@@ -1,5 +1,5 @@
 variable "name" {
-  description = "Base name for the secured hub resources (e.g. \"hub01\"). Used to derive the virtual hub, firewall, and ER gateway names."
+  description = "Descriptor for the secured hub resources (e.g. \"hub01\"). Used as the description segment when generating names via modules/naming."
   type        = string
 }
 
@@ -11,6 +11,26 @@ variable "resource_group_name" {
 variable "location" {
   description = "Azure region for all resources in this module."
   type        = string
+}
+
+# ---------------------------------------------------------------------------
+# Naming inputs — passed through to modules/naming
+# ---------------------------------------------------------------------------
+
+variable "subscription_id" {
+  description = "Subscription/landing-zone segment used to name the hub resources (e.g. \"conn\")."
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment segment used to name the hub resources (e.g. \"dev\", \"prod\")."
+  type        = string
+}
+
+variable "unique_id" {
+  description = "Optional uniqueness/instance suffix used when naming the hub resources (e.g. \"01\")."
+  type        = string
+  default     = ""
 }
 
 variable "virtual_wan_id" {
@@ -99,6 +119,12 @@ variable "express_route" {
     condition     = var.express_route.scale_units >= 1 && var.express_route.scale_units <= 10
     error_message = "express_route.scale_units must be between 1 and 10."
   }
+}
+
+variable "log_analytics_workspace_id" {
+  description = "Resource ID of the Log Analytics workspace (output law_id from modules/platform/management) to send firewall diagnostics to. When null, no diagnostic setting is created."
+  type        = string
+  default     = null
 }
 
 variable "tags" {
