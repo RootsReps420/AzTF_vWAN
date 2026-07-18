@@ -1,0 +1,88 @@
+# ---------------------------------------------------------------------------
+# AVD Scaling Plan
+#
+# Deploys an AVD Scaling Plan, associates it with host pools, and defines its
+# schedules.
+#
+#   - Pooled schedules       -> native azurerm `schedule` blocks
+#   - Personal schedules     -> azapi (Microsoft.DesktopVirtualization/
+#                               scalingPlans/personalSchedules). The azurerm
+#                               provider (<= 4.x) has no native resource for
+#                               personal schedules, so azapi is used. This is the
+#                               path used by PERS (personal desktop) workloads.
+#
+# Names come from modules/naming (abbreviation vdsp — PENDING TDA sign-off,
+# LLD Open Item 2).
+# ---------------------------------------------------------------------------
+
+module "scaling_plan_name" {
+  source = "../../naming"
+
+  resource_type   = "avd_scaling_plan"
+  location        = var.location
+  subscription_id = var.subscription_id
+  environment     = var.environment
+  description     = var.name
+  unique_id       = var.unique_id
+}
+
+resource "azurerm_virtual_desktop_scaling_plan" "this" {
+  name                = module.scaling_plan_name.name
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  friendly_name       = var.friendly_name
+  description         = var.description
+  time_zone           = var.time_zone
+  tags                = var.tags
+
+  dynamic "host_pool" {
+    for_each = var.host_pool_associations
+    content {
+      hostpool_id          = host_pool.value.hostpool_id
+      scaling_plan_enabled = host_pool.value.scaling_plan_enabled
+    }
+  }
+
+  # Pooled schedules (native azurerm).
+  dynamic "schedule" {
+    for_each = var.pooled_schedules
+    content {
+      name         = schedule.key
+      days_of_week = schedule.value.days_of_week
+
+      ramp_up_start_time                 = schedule.value.ramp_up_start_time
+      ramp_up_load_balancing_algorithm   = schedule.value.ramp_up_load_balancing_algorithm
+      ramp_up_minimum_hosts_percent      = schedule.value.ramp_up_minimum_hosts_percent
+      ramp_up_capacity_threshold_percent = schedule.value.ramp_up_capacity_threshold_percent
+
+      peak_start_time                   = schedule.value.peak_start_time
+      peak_load_balancing_algorithm     = schedule.value.peak_load_balancing_algorithm
+      off_peak_start_time               = schedule.value.off_peak_start_time
+      off_peak_load_balancing_algorithm = schedule.value.off_peak_load_balancing_algorithm
+
+      ramp_down_start_time                 = schedule.value.ramp_down_start_time
+      ramp_down_load_balancing_algorithm   = schedule.value.ramp_down_load_balancing_algorithm
+      ramp_down_minimum_hosts_percent      = schedule.value.ramp_down_minimum_hosts_percent
+      ramp_down_capacity_threshold_percent = schedule.value.ramp_down_capacity_threshold_percent
+      ramp_down_force_logoff_users         = schedule.value.ramp_down_force_logoff_users
+      ramp_down_wait_time_minutes          = schedule.value.ramp_down_wait_time_minutes
+      ramp_down_notification_message       = schedule.value.ramp_down_notification_message
+      ramp_down_stop_hosts_when            = schedule.value.ramp_down_stop_hosts_when
+    }
+  }
+}
+
+# Personal schedules (azapi). The `properties` object is passed through to the
+# ARM body so the full personal-schedule surface is available without azurerm
+# support. See README for the expected shape.
+resource "azapi_resource" "personal_schedule" {
+  for_each = var.personal_schedules
+
+  type      = "Microsoft.DesktopVirtualization/scalingPlans/personalSchedules@2024-04-03"
+  name      = each.key
+  parent_id = azurerm_virtual_desktop_scaling_plan.this.id
+
+  body = {
+    properties = each.value.properties
+  }
+}
