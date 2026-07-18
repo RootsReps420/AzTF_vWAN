@@ -1,0 +1,19 @@
+azure_subscription_id = "00000000-0000-0000-0000-000000000000"
+location              = "uksouth"
+environment           = "prod"
+
+subscription_code_conn = "conn"
+subscription_code_vdi  = "vdi"
+
+# Sourced from the environments/_global workspace output `vwan_id`.
+virtual_wan_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/uks-conn-rsg-global/providers/Microsoft.Network/virtualWans/uks-conn-vwn-vdi-01"
+
+mandatory_tags = {
+  cost_centre         = "CC-4821"
+  owner               = "avd-platform@example.com"
+  data_classification = "Internal"
+  service_criticality = "Gold"
+}
+
+# Optional — connect Hub01's ER gateway to a circuit peering.
+# expressroute_circuit_peering_id = "/subscriptions/.../peerings/AzurePrivatePeering"

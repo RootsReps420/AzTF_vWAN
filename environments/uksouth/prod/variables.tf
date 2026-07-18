@@ -1,0 +1,77 @@
+variable "azure_subscription_id" {
+  description = "Azure subscription GUID this environment deploys into."
+  type        = string
+}
+
+variable "location" {
+  description = "Azure region for this environment root. Change this (or use a different region root) to deploy elsewhere — all naming is region-driven."
+  type        = string
+  default     = "uksouth"
+}
+
+variable "environment" {
+  description = "Environment segment used in names and tags."
+  type        = string
+  default     = "prod"
+}
+
+variable "subscription_code_conn" {
+  description = "Naming segment for connectivity resources (hubs, firewall, management)."
+  type        = string
+  default     = "conn"
+}
+
+variable "subscription_code_vdi" {
+  description = "Naming segment for VDI workload resources (spokes, key vault, storage, AVD, images)."
+  type        = string
+  default     = "vdi"
+}
+
+variable "virtual_wan_id" {
+  description = "Resource ID of the global Virtual WAN. Sourced from the environments/_global workspace output vwan_id."
+  type        = string
+}
+
+variable "mandatory_tags" {
+  description = "Mandatory bank tags applied to all resources (see modules/tags)."
+  type = object({
+    cost_centre         = string
+    owner               = string
+    data_classification = string
+    service_criticality = string
+  })
+}
+
+# ---------------------------------------------------------------------------
+# Network address plan (prod ranges)
+# ---------------------------------------------------------------------------
+
+variable "hub01_address_prefix" {
+  description = "Address prefix for Hub01 (secured hub)."
+  type        = string
+  default     = "10.100.0.0/23"
+}
+
+variable "hub02_address_prefix" {
+  description = "Address prefix for Hub02 (unsecured hub)."
+  type        = string
+  default     = "10.101.0.0/23"
+}
+
+variable "pers_spoke_address_space" {
+  description = "Address space for the PERS lab spoke."
+  type        = list(string)
+  default     = ["10.110.0.0/22"]
+}
+
+variable "msh_spoke_address_space" {
+  description = "Address space for the MSH lab spoke."
+  type        = list(string)
+  default     = ["10.120.0.0/22"]
+}
+
+variable "expressroute_circuit_peering_id" {
+  description = "Optional ExpressRoute circuit private peering ID to connect Hub01's ER gateway. Null creates the gateway without a circuit connection."
+  type        = string
+  default     = null
+}
