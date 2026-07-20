@@ -13,11 +13,11 @@ resource name. **Every other module calls this** — names are never hardcoded.
 
 | Family | Pattern | Example |
 |--------|---------|---------|
-| Default | `{region}-{subscription}-{abbr}-{description}-{uid}` | `uks-conn-afw-hub01-01` |
-| Resource Group | default pattern, abbr `rsg` (TDA §9.1) | `uks-conn-rsg-global` |
-| Storage Account (`storage_account`, `fslogix_storage_account`, `blob_storage_account`) | `{region}{env}{abbr}{desc}{uid}` — lowercased, alphanumeric only, ≤ 24 chars (TDA §9.3) | `uksdevfsad78101` |
-| Key Vault (`key_vault`) | `{region}-{env}-kvt-{desc}-{uid}` — lowercased, ≤ 24 chars (TDA §11.1) | `uks-dev-kvt-vdi01a1` |
-| Managed Identity (`managed_identity`, `managed_user_id`) | `{subscription}-{env}-msi-{desc}-{uid}` (subscription = service, TDA §13.5) | `psv-pd1-msi-iam-01` |
+| Default (TDA §9.2) | `{region}-{subscription}-{abbr}-{description\|id}` | `uks-conn-afw-hub01` |
+| Resource Group (TDA §9.1) | default pattern, abbr `rsg` | `uks-conn-rsg-global` |
+| Storage Account (`storage_account`, `fslogix_storage_account`, `blob_storage_account`) | `{region}{env}{service}{subscription}{id}` — no resource abbr; lowercased, alphanumeric only, ≤ 24 chars (TDA §9.3) | `uksdevpersvdi01` |
+| Key Vault (`key_vault`) | `{region}-{env}-{service}-kvt-{7charId}` — lowercased, ≤ 24 chars (TDA §11.1) | `uks-dev-pers-kvt-prslb01` |
+| Managed Identity (`managed_identity`, `managed_user_id`) | `{service}-{env}-msi-{resource}-{description}-{id}` (service = subscription segment; TDA §13.5) | `psv-pd1-msi-iam-workbook-01` |
 | Compute Gallery (`compute_gallery`) | underscore-joined (Azure disallows hyphens) | `uks_conn_gal_avd` |
 
 - **Fails `terraform plan`** with a clear, enumerated error if an unknown
@@ -25,15 +25,25 @@ resource name. **Every other module calls this** — names are never hardcoded.
 
 Empty segments (e.g. an omitted `unique_id`) are dropped, so no double hyphens.
 
+## Marker legend
+
+- `PENDING(TDA)` — abbreviation/region not yet defined or approved in the TDA
+  standard; provisional and may change on sign-off.
+- `PENDING(LLD)` — open design item tracked in the solution LLD.
+
 ## Pending TDA sign-off
 
 The following are included but **awaiting TDA approval** (LLD Open Items 1 & 2)
-and may change:
+and may change. The TDA standard defines only `uks`/`ukw` and has **no** AVD
+abbreviations:
 
-- Region codes: `italynorth` → `itn`, `spaincentral` → `spc`
-- AVD abbreviations: `vdhp`, `vdws`, `vdag`, `vdsp`
-- Monitoring abbreviations: `dce`, `sqr`, `wkb`
-- `ip_group` → `ipg` (no TDA abbreviation defined — local convention)
+- Region codes (non-standard): `italynorth` → `itn`, `spaincentral` → `spc`,
+  `northeurope` → `neu`, `westeurope` → `weu`. Only `uks`/`ukw` are TDA-approved.
+- AVD abbreviations (provisional, 3-letter to satisfy the §9.2 `[a-z]{3}` rule):
+  `avd_host_pool` → `vdh`, `avd_workspace` → `vdw`, `avd_application_group` →
+  `vda`, `avd_scaling_plan` → `vds`.
+- Monitoring abbreviations: `dce`, `sqr`, `wkb` (no TDA code defined).
+- `ip_group` → `ipg` (no TDA abbreviation defined — local convention).
 
 ## Abbreviations
 
@@ -75,6 +85,7 @@ module "firewall_name" {
 | `environment` | Environment segment (KV/Storage/MSI patterns) | `string` | `""` |
 | `description` | Short workload/purpose descriptor | `string` | `""` |
 | `unique_id` | Optional instance suffix | `string` | `""` |
+| `resource_code` | 3-letter resource code for the Managed Identity `{resource}` segment (TDA §13.5) | `string` | `""` |
 
 ## Outputs
 

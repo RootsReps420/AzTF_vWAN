@@ -31,3 +31,9 @@ variable "unique_id" {
   type        = string
   default     = ""
 }
+
+variable "resource_code" {
+  description = "3-letter resource code for the Managed Identity {resource} segment (TDA §13.5, e.g. \"iam\", \"sta\"). Only used by managed_identity / managed_user_id patterns; ignored otherwise. Omitted when empty."
+  type        = string
+  default     = ""
+}

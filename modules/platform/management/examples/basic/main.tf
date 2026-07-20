@@ -20,7 +20,7 @@ module "management" {
     "platform-oncall" = {
       short_name = "pltoncall"
       email_receivers = {
-        "primary" = { email_address = "avd-platform@example.com" }
+        "primary" = { email_address = "avd-platform@example.com" } # EXAMPLE ONLY: real on-call DL/email
       }
     }
   }

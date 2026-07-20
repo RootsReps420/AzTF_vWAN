@@ -1,3 +1,4 @@
+# TODO(deploy): supply the real subscription GUID for this environment via tfvars.
 variable "azure_subscription_id" {
   description = "Azure subscription GUID this environment deploys into."
   type        = string
@@ -27,11 +28,13 @@ variable "subscription_code_vdi" {
   default     = "vdi"
 }
 
+# TODO(deploy): set to the environments/_global output `vwan_id` for this tenant.
 variable "virtual_wan_id" {
   description = "Resource ID of the global Virtual WAN. Sourced from the environments/_global workspace output vwan_id."
   type        = string
 }
 
+# TODO(deploy): supply real values via tfvars (cost centre, owner, classification, criticality).
 variable "mandatory_tags" {
   description = "Mandatory bank tags applied to all resources (see modules/tags)."
   type = object({

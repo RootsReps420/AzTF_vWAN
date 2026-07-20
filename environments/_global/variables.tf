@@ -1,3 +1,4 @@
+# TODO(deploy): supply the real connectivity/global subscription GUID via tfvars.
 variable "azure_subscription_id" {
   description = "Azure subscription GUID the connectivity/global resources are deployed into."
   type        = string
@@ -10,9 +11,9 @@ variable "subscription_code" {
 }
 
 variable "environment" {
-  description = "Environment segment for the global resources."
+  description = "Environment segment for the global resources. TDA consumer environments are dev/ppd/prd (TDA §4)."
   type        = string
-  default     = "prod"
+  default     = "prd" # was "prod": TDA §4 uses "prd"
 }
 
 variable "location" {
@@ -21,6 +22,7 @@ variable "location" {
   default     = "uksouth"
 }
 
+# TODO(deploy): supply real values via tfvars (cost centre, owner, classification, criticality).
 variable "mandatory_tags" {
   description = "Mandatory bank tags applied to all global resources (see modules/tags)."
   type = object({

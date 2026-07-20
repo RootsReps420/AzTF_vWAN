@@ -145,6 +145,10 @@ resource "azurerm_route_table" "this" {
   tags                = var.tags
 
   # Rule 1: default route -> Hub02 VPN Gateway (internet via Palo Alto Proxy).
+  # PENDING(LLD): SENIOR REVIEW - in a vWAN topology the spoke reaches the hub via
+  # the hub connection (BGP), not a local VNet gateway. Confirm that a static
+  # 0.0.0.0/0 -> VirtualNetworkGateway UDR routes as intended here, or whether the
+  # next hop should be the Hub02 VPN gateway's private IP (VirtualAppliance).
   route {
     name           = "default-to-vpn"
     address_prefix = "0.0.0.0/0"
@@ -186,6 +190,8 @@ resource "azurerm_network_watcher" "this" {
 # Hub01 — IP reachability. Internet security disabled: the UDR governs egress,
 # not Hub01 Routing Intent.
 resource "azurerm_virtual_hub_connection" "hub01" {
+  # Intentional literal name (not via modules/naming): embeds spoke + target hub.
+  # "vhc" matches the TDA abbreviation.
   name                      = "vhc-${var.name}-hub01"
   virtual_hub_id            = var.hub01_id
   remote_virtual_network_id = azurerm_virtual_network.this.id
@@ -194,6 +200,7 @@ resource "azurerm_virtual_hub_connection" "hub01" {
 
 # Hub02 — remote gateway transit for VPN egress.
 resource "azurerm_virtual_hub_connection" "hub02" {
+  # Intentional literal name (not via modules/naming): embeds spoke + target hub.
   name                      = "vhc-${var.name}-hub02"
   virtual_hub_id            = var.hub02_id
   remote_virtual_network_id = azurerm_virtual_network.this.id

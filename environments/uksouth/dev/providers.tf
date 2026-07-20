@@ -4,7 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.75.0, < 5.0.0"
+      version = ">= 4.0.0, < 5.0.0" # 4.x required: code uses 4.x-only args (rbac_authorization_enabled, https_traffic_only_enabled, enabled_metric)
     }
     azapi = {
       source  = "Azure/azapi"

@@ -9,8 +9,8 @@
 # lapses — pipelines always have a valid token without manual rotation and
 # without the perpetual-diff problem of timestamp()/timeadd().
 #
-# The host pool name comes from modules/naming (abbreviation vdhp — PENDING TDA
-# sign-off, LLD Open Item 2).
+# The host pool name comes from modules/naming (abbreviation vdh — PENDING(TDA)
+# sign-off, LLD Open Item 2; TDA defines no AVD codes yet).
 # ---------------------------------------------------------------------------
 
 module "hostpool_name" {

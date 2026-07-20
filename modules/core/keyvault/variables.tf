@@ -30,8 +30,13 @@ variable "environment" {
 }
 
 variable "unique_id" {
-  description = "Uniqueness id for the KV name (the 7-char id segment, e.g. \"lab01a1\"). Key Vault names are globally unique."
+  description = "Uniqueness id for the KV name (the 7-char id segment per TDA §11.1, e.g. \"lab01a1\"). Key Vault names are GLOBALLY unique across Azure."
   type        = string
+
+  validation {
+    condition     = length(var.unique_id) >= 3 && length(var.unique_id) <= 7
+    error_message = "unique_id must be 3-7 characters (TDA §11.1 uses a 7-char id; Key Vault names are capped at 24 chars)."
+  }
 }
 
 # ---------------------------------------------------------------------------

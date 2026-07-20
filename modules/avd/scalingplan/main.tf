@@ -11,8 +11,8 @@
 #                               personal schedules, so azapi is used. This is the
 #                               path used by PERS (personal desktop) workloads.
 #
-# Names come from modules/naming (abbreviation vdsp — PENDING TDA sign-off,
-# LLD Open Item 2).
+# Names come from modules/naming (abbreviation vds — PENDING(TDA) sign-off,
+# LLD Open Item 2; TDA defines no AVD codes yet).
 # ---------------------------------------------------------------------------
 
 module "scaling_plan_name" {

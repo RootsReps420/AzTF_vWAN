@@ -18,9 +18,9 @@ module "spoke_msh" {
     }
   }
 
-  hub01_id                  = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-conn-hub01-dev/providers/Microsoft.Network/virtualHubs/uks-conn-vhb-hub01-01"
-  hub02_id                  = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-conn-hub02-dev/providers/Microsoft.Network/virtualHubs/uks-conn-vhb-hub02-02"
-  hub01_firewall_private_ip = "10.0.0.68"
+  hub01_id                  = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-conn-hub01-dev/providers/Microsoft.Network/virtualHubs/uks-conn-vhb-hub01-01" # EXAMPLE ONLY: real Hub01 id
+  hub02_id                  = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-conn-hub02-dev/providers/Microsoft.Network/virtualHubs/uks-conn-vhb-hub02-02" # EXAMPLE ONLY: real Hub02 id
+  hub01_firewall_private_ip = "10.0.0.68"                                                                                                                                          # EXAMPLE ONLY: real Hub01 firewall private IP
 
   tags = {
     "managed-by" = "terraform"

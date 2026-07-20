@@ -11,7 +11,7 @@ module "hub_unsecured" {
   environment         = "dev"
   unique_id           = "02"
 
-  virtual_wan_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-conn-global-prod/providers/Microsoft.Network/virtualWans/uks-conn-vwn-vdi-01"
+  virtual_wan_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-conn-global-prod/providers/Microsoft.Network/virtualWans/uks-conn-vwn-vdi-01" # EXAMPLE ONLY: real vWAN id
   address_prefix = "10.1.0.0/23"
 
   vpn = {

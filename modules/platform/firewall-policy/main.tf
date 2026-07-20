@@ -30,6 +30,8 @@ module "policy_name" {
 resource "azurerm_ip_group" "this" {
   for_each = var.ip_groups
 
+  # Intentional literal name (not via modules/naming): embeds the caller-supplied
+  # map key. "ipg" is a local convention — PENDING(TDA): no approved abbreviation.
   name                = "ipg-${each.key}"
   resource_group_name = var.resource_group_name
   location            = var.location

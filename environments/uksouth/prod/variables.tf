@@ -1,3 +1,4 @@
+# TODO(deploy): supply the real subscription GUID for this environment via tfvars.
 variable "azure_subscription_id" {
   description = "Azure subscription GUID this environment deploys into."
   type        = string
@@ -10,9 +11,9 @@ variable "location" {
 }
 
 variable "environment" {
-  description = "Environment segment used in names and tags."
+  description = "Environment segment used in names and tags. TDA consumer environments are dev/ppd/prd (TDA §4)."
   type        = string
-  default     = "prod"
+  default     = "prd" # was "prod": TDA §4 uses "prd"
 }
 
 variable "subscription_code_conn" {
@@ -27,6 +28,7 @@ variable "subscription_code_vdi" {
   default     = "vdi"
 }
 
+# TODO(deploy): set to the environments/_global output `vwan_id` for this tenant.
 variable "virtual_wan_id" {
   description = "Resource ID of the global Virtual WAN. Sourced from the environments/_global workspace output vwan_id."
   type        = string

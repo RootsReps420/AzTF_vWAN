@@ -122,6 +122,8 @@ resource "azurerm_network_watcher" "this" {
 
 # Connect the spoke VNet to Hub01. No UDR — Hub01 Routing Intent programs routes.
 resource "azurerm_virtual_hub_connection" "hub01" {
+  # Intentional literal name (not via modules/naming): the connection name embeds
+  # the spoke name + target hub for readability. "vhc" matches the TDA abbreviation.
   name                      = "vhc-${var.name}-hub01"
   virtual_hub_id            = var.hub01_id
   remote_virtual_network_id = azurerm_virtual_network.this.id

@@ -148,7 +148,7 @@ module "management" {
   environment         = local.env
   unique_id           = "01"
 
-  law_retention_in_days           = 90
+  law_retention_in_days           = 90 # TODO(deploy): confirm retention vs data-classification/retention policy (30-730 days)
   create_data_collection_endpoint = true
   create_avd_insights_dcr         = true
 
@@ -167,8 +167,15 @@ module "firewall_policy" {
   location            = local.location
   subscription_id     = var.subscription_code_conn
   environment         = local.env
-  unique_id           = "01"
+  # unique_id omitted: the name "hub01" already carries the instance number
+  # (avoids a redundant ...-fwp-hub01-01 per TDA §9.2 {description|id}).
 
+  # TODO(deploy): no rule_collection_groups / ip_groups are set here, so this
+  #               policy is EMPTY. Because Hub01 Routing Intent forces all spoke
+  #               traffic through the firewall, an empty policy means egress is
+  #               DEFAULT-DENY. Add baseline AVD allow rules (AVD service
+  #               tags/FQDNs, KMS activation, Entra/Kerberos, storage) before
+  #               session hosts can function. See this env's README.
   sku = "Standard"
   dns = {
     proxy_enabled = true
@@ -186,7 +193,7 @@ module "hub_secured" {
   location            = local.location
   subscription_id     = var.subscription_code_conn
   environment         = local.env
-  unique_id           = "01"
+  # unique_id omitted: the name "hub01" already carries the instance number.
 
   virtual_wan_id     = var.virtual_wan_id
   address_prefix     = var.hub01_address_prefix
@@ -194,7 +201,7 @@ module "hub_secured" {
 
   express_route = {
     scale_units        = 1
-    circuit_peering_id = var.expressroute_circuit_peering_id
+    circuit_peering_id = var.expressroute_circuit_peering_id # TODO(deploy): null = ER gateway only; set the circuit private-peering id to connect ExpressRoute
   }
 
   log_analytics_workspace_id = module.management.law_id
@@ -209,7 +216,7 @@ module "hub_unsecured" {
   location            = local.location
   subscription_id     = var.subscription_code_conn
   environment         = local.env
-  unique_id           = "02"
+  # unique_id omitted: the name "hub02" already carries the instance number.
 
   virtual_wan_id = var.virtual_wan_id
   address_prefix = var.hub02_address_prefix
@@ -257,7 +264,7 @@ module "keyvault_pers" {
   location            = local.location
   subscription_id     = var.subscription_code_vdi
   environment         = local.env
-  unique_id           = "perslab01"
+  unique_id           = "prslb01" # TODO(deploy): 7-char id (TDA §11.1). Key Vault names are GLOBALLY unique - make this unique per deployment.
 
   keys = {
     "cmk-fslogix" = {
@@ -280,6 +287,9 @@ module "storage_fslogix_pers" {
   environment         = local.env
   unique_id           = "01"
 
+  # TODO(deploy): AADKERB (Entra ID Kerberos) also needs tenant-level Entra
+  #               Kerberos enablement and per-user RBAC ("Storage File Data SMB
+  #               Share Contributor") - neither is managed here. See README.
   azure_files_authentication = {
     directory_type = "AADKERB"
   }

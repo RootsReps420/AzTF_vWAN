@@ -4,8 +4,8 @@
 # Deploys an AVD Workspace, any number of Application Groups, and associates the
 # app groups with the workspace.
 #
-# Names come from modules/naming (abbreviations vdws / vdag — PENDING TDA
-# sign-off, LLD Open Item 2).
+# Names come from modules/naming (abbreviations vdw / vda — PENDING(TDA)
+# sign-off, LLD Open Item 2; TDA defines no AVD codes yet).
 # ---------------------------------------------------------------------------
 
 module "workspace_name" {

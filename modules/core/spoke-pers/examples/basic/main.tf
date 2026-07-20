@@ -31,7 +31,7 @@ module "spoke_pers" {
     }
   }
 
-  hub01_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-conn-hub01-dev/providers/Microsoft.Network/virtualHubs/uks-conn-vhb-hub01-01"
+  hub01_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-conn-hub01-dev/providers/Microsoft.Network/virtualHubs/uks-conn-vhb-hub01-01" # EXAMPLE ONLY: replace with a real Hub01 id
 
   tags = {
     "managed-by" = "terraform"

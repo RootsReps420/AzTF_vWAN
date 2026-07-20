@@ -16,7 +16,7 @@ module "scalingplan" {
 
   host_pool_associations = {
     "pers-pool" = {
-      hostpool_id          = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-vdi-pers-dev/providers/Microsoft.DesktopVirtualization/hostPools/uks-vdi-vdhp-pers-01"
+      hostpool_id          = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-vdi-pers-dev/providers/Microsoft.DesktopVirtualization/hostPools/uks-vdi-vdh-pers-01" # EXAMPLE ONLY: real host pool id
       scaling_plan_enabled = true
     }
   }

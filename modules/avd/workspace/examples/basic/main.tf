@@ -15,7 +15,7 @@ module "workspace" {
 
   application_groups = {
     "desktop" = {
-      host_pool_id                 = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-vdi-fin-dev/providers/Microsoft.DesktopVirtualization/hostPools/uks-vdi-vdhp-mult-fin-01"
+      host_pool_id                 = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-vdi-fin-dev/providers/Microsoft.DesktopVirtualization/hostPools/uks-vdi-vdh-mult-fin-01" # EXAMPLE ONLY: real host pool id
       type                         = "Desktop"
       friendly_name                = "Finance Desktop"
       default_desktop_display_name = "Finance"

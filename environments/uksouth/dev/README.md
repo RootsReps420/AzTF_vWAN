@@ -38,5 +38,55 @@ terraform apply
 
 ## Providers
 
-Requires `azurerm`, `time`, and `azapi` (the last for AVD personal scaling
-schedules).
+Requires `azurerm` (`>= 4.0.0, < 5.0.0` — the code uses 4.x-only arguments),
+`time`, and `azapi` (the last for AVD personal scaling schedules).
+
+## Pre-deployment fill-in checklist
+
+Inline markers make every fill-in point greppable. Before `terraform apply`:
+
+```bash
+# List everything an engineer must supply/decide before this deploys usefully:
+grep -rn "TODO(deploy)" .
+
+# List governance placeholders awaiting external sign-off:
+grep -rn "PENDING(TDA)\|PENDING(LLD)" ../../..
+```
+
+Known `TODO(deploy)` items in this environment:
+
+- `terraform.tfvars`: real `azure_subscription_id`, `virtual_wan_id`, and
+  `mandatory_tags` (the example uses placeholder `CC-4821` / `example.com`).
+- `module.firewall_policy`: no rule collection groups are set, so with Hub01
+  Routing Intent **egress is default-deny**. Add baseline AVD allow rules.
+- `module.keyvault_pers`: `unique_id` must be a globally-unique 7-char id.
+- `module.storage_fslogix_pers`: AADKERB also needs tenant Entra Kerberos
+  enablement + per-user storage RBAC (not managed here).
+- `module.hub_secured`: set `expressroute_circuit_peering_id` to connect a
+  circuit (null = gateway only).
+
+## Deploying a working session host (not yet built)
+
+This skeleton stops short of a running VM. To deploy both hubs plus a single
+**Entra ID-joined** session host that functions, the following are still
+required (documented here, not yet implemented):
+
+- **`modules/avd/session-host`** (new): NIC + `azurerm_windows_virtual_machine`
+  from a gallery image, plus VM extensions:
+  - AVD agent/DSC extension — registers the VM to the host pool using the host
+    pool `registration_token` output.
+  - `AADLoginForWindows` — Entra ID join.
+  - Guest Attestation — required for TrustedLaunch image definitions.
+  - Azure Monitor Agent + a DCR association to the AVD Insights DCR.
+  - When built, add TDA codes to `modules/naming`: `vir` (VM), `nic`, `dsk`
+    (disk), `ext` (VM extension), `pip` (public IP, if any).
+- **Baseline firewall allow rules** on `module.firewall_policy` (AVD service
+  tags/FQDNs, KMS activation, Entra/Kerberos, storage) — see the default-deny
+  note above.
+- **FSLogix name resolution**: storage private endpoint +
+  `privatelink.file.core.windows.net` private DNS zone (or equivalent).
+- **RBAC**: "Virtual Machine User/Administrator Login" on the session-host RG,
+  "Desktop Virtualization User" on the app group (so users see the desktop), and
+  "Storage File Data SMB Share Contributor" on the FSLogix share.
+- **Image versions** are published by Packer (out of Terraform scope; the
+  gallery module manages definitions only).

@@ -15,7 +15,7 @@ module "gallery" {
   role_assignments = {
     "packer-build" = {
       role_definition_name = "Contributor"
-      principal_id         = "00000000-0000-0000-0000-000000000000" # Packer build MSI object id
+      principal_id         = "00000000-0000-0000-0000-000000000000" # EXAMPLE ONLY: real Packer build MSI object id
     }
   }
 
