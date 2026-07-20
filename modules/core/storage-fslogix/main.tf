@@ -88,8 +88,7 @@ resource "azurerm_storage_account_customer_managed_key" "this" {
   count = var.customer_managed_key == null ? 0 : 1
 
   storage_account_id        = azurerm_storage_account.this.id
-  key_vault_id              = var.customer_managed_key.key_vault_id
-  key_name                  = var.customer_managed_key.key_name
+  key_vault_key_id          = var.customer_managed_key.key_vault_key_id
   user_assigned_identity_id = var.customer_managed_key.user_assigned_identity_id
 }
 

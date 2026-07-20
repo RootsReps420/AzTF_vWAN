@@ -135,8 +135,7 @@ variable "network_rules" {
 variable "customer_managed_key" {
   description = "Optional CMK encryption. Requires a user-assigned identity with access to the key."
   type = object({
-    key_vault_id              = string
-    key_name                  = string
+    key_vault_key_id          = string # full Key Vault key id (replaces deprecated key_vault_id + key_name + key_version)
     user_assigned_identity_id = string
   })
   default = null
