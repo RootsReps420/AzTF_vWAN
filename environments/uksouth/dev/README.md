@@ -65,21 +65,18 @@ Known `TODO(deploy)` items in this environment:
 - `module.hub_secured`: set `expressroute_circuit_peering_id` to connect a
   circuit (null = gateway only).
 
-## Deploying a working session host (not yet built)
+## Session hosts (VMs are NOT built by Terraform)
 
-This skeleton stops short of a running VM. To deploy both hubs plus a single
-**Entra ID-joined** session host that functions, the following are still
-required (documented here, not yet implemented):
+Session-host VMs are intentionally **not** managed by Terraform, so there is no
+session-host module in this repo. Production holds 20,000+ VMs, which is beyond
+what a single Terraform state file should hold (slow plans, lock contention,
+large blast radius). VMs are provisioned by **pipeline tooling** that consumes
+the host pool `registration_token` output (from
+[`modules/avd/hostpool`](../../../modules/avd/hostpool)).
 
-- **`modules/avd/session-host`** (new): NIC + `azurerm_windows_virtual_machine`
-  from a gallery image, plus VM extensions:
-  - AVD agent/DSC extension — registers the VM to the host pool using the host
-    pool `registration_token` output.
-  - `AADLoginForWindows` — Entra ID join.
-  - Guest Attestation — required for TrustedLaunch image definitions.
-  - Azure Monitor Agent + a DCR association to the AVD Insights DCR.
-  - When built, add TDA codes to `modules/naming`: `vir` (VM), `nic`, `dsk`
-    (disk), `ext` (VM extension), `pip` (public IP, if any).
+To make a session host actually function via that pipeline, the following
+platform gaps still apply:
+
 - **Baseline firewall allow rules** on `module.firewall_policy` (AVD service
   tags/FQDNs, KMS activation, Entra/Kerberos, storage) — see the default-deny
   note above.
