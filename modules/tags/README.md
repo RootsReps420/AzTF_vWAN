@@ -28,10 +28,10 @@ module "tags" {
   region      = "uksouth"
 
   mandatory = {
-    cost_centre         = "CC-4821"
-    owner               = "avd-platform@example.com"
-    data_classification = "Internal"
-    service_criticality = "Gold"
+    costCentre             = "CC-4821"
+    securityClassification = "Internal"
+    resourceOwner          = "avd-platform@example.com"
+    CMDB_AppID             = "APP-12345"
   }
 
   additional = {
@@ -57,10 +57,10 @@ module "tags" {
 
 | Key | Description |
 |-----|-------------|
-| `cost_centre` | Charge-back cost centre code |
-| `owner` | Accountable owner (team or DL email) |
-| `data_classification` | e.g. Public / Internal / Confidential |
-| `service_criticality` | e.g. Bronze / Silver / Gold |
+| `costCentre` | Charge-back cost centre code |
+| `securityClassification` | e.g. Public / Internal / Confidential |
+| `resourceOwner` | Accountable owner (team or DL) |
+| `CMDB_AppID` | CMDB application identifier |
 
 ## Outputs
 

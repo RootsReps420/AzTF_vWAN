@@ -93,6 +93,9 @@ locals {
 
     # Structure
     resource_group = "rsg"
+
+    # Compute scale sets — only needed if agent VMSS becomes TF-managed (currently stays PS).
+    virtual_machine_scale_set = "vss" # PENDING(TDA): provisional; unused while agents stay PS
   }
 
   # Azure region -> region short code.

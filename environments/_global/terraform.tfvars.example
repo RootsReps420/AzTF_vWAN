@@ -1,11 +1,11 @@
-azure_subscription_id = "00000000-0000-0000-0000-000000000000" # TODO(deploy): real connectivity/global subscription GUID
+azure_subscription_id = "00000000-0000-0000-0000-000000000000" # TODO(deploy): global/connectivity subscription GUID
 subscription_code     = "conn"
-environment           = "prd" # TDA §4 uses "prd" (not "prod")
+environment           = "prd" # TDA §4 uses prd for production-tier global resources
 location              = "uksouth"
 
 mandatory_tags = {
-  cost_centre         = "CC-4821"                  # TODO(deploy): real charge-back cost centre
-  owner               = "avd-platform@example.com" # TODO(deploy): real accountable owner (team DL/email)
-  data_classification = "Internal"                 # TODO(deploy): confirm classification (e.g. Public/Internal/Confidential)
-  service_criticality = "Gold"                     # TODO(deploy): confirm criticality tier
+  costCentre             = "CLL411S1XJ"
+  securityClassification = "Limited"
+  resourceOwner          = "Fletcher, Wayne (Colleague ID 0028929)"
+  CMDB_AppID             = "AL17611"
 }

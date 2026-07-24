@@ -1,14 +1,14 @@
 # Azure 1.0 to Terraform Migration Plan
 
-**Status:** Planned
+**Status:** In progress
 **Scope:** Port the legacy Azure 1.0 VDI estate (Bicep + PowerShell + AzDo pipelines across vdi-platform, vdi-scripts, vdi-images) onto the new Terraform module set for a two-hub Azure Virtual WAN deploy via GitHub + AzDo.
 
 ## Progress checklist
 
-- [ ] Phase 0: live inventory across all 7 legacy repos; dead-code + pipeline-fate docs
-- [ ] Phase A: extend naming abbreviations, update tags mandatory keys, legacy->TDA rename map
-- [ ] Phase B: per-scope env roots; keep dev-tier split; drop ppd; subscription inventory; start int+prod
-- [ ] Phase C: re-platform peering -> vWAN; IPs/VNets/subnets verbatim; baseline firewall-policy only; Hub02 VPN/UDR placeholders
+- [x] Phase 0: live inventory across all 7 legacy repos; dead-code + pipeline-fate docs
+- [x] Phase A: extend naming abbreviations, update tags mandatory keys, legacy->TDA rename map
+- [x] Phase B: per-scope env roots; keep dev-tier split; drop ppd; subscription inventory; start int+prod
+- [x] Phase C: re-platform peering -> vWAN; IPs/VNets/subnets verbatim; baseline firewall-policy only; Hub02 VPN/UDR placeholders
 - [ ] Phase D: LAW/mgmt spoke/KV/alerts APR+UAMI/multi-DCR; FSLogix storage TF; agent VMSS stays PS; flow logs deferred
 - [ ] Phase E: AVD objects; **MSH scaling plans per BU/host pool**; wire registration-token; retire bicep HP path
 - [ ] Phase F: gallery for_each (~50 defs) + RBAC; update Packer/pipeline names; retire gallery bicep

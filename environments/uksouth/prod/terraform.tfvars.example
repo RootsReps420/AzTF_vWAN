@@ -9,10 +9,10 @@ subscription_code_vdi  = "vdi"
 virtual_wan_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/uks-conn-rsg-global/providers/Microsoft.Network/virtualWans/uks-conn-vwn-vdi-01" # TODO(deploy): real vWAN id (environments/_global output vwan_id)
 
 mandatory_tags = {
-  cost_centre         = "CC-4821"                  # TODO(deploy): real charge-back cost centre
-  owner               = "avd-platform@example.com" # TODO(deploy): real accountable owner (team DL/email)
-  data_classification = "Internal"                 # TODO(deploy): confirm classification (e.g. Public/Internal/Confidential)
-  service_criticality = "Gold"                     # TODO(deploy): confirm criticality tier
+  costCentre             = "CLL411S1XJ"
+  securityClassification = "Limited"
+  resourceOwner          = "avd-platform@example.com"
+  CMDB_AppID             = "AL17611"
 }
 
 # Optional — connect Hub01's ER gateway to a circuit peering.

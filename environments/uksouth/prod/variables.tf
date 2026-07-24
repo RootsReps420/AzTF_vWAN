@@ -37,10 +37,10 @@ variable "virtual_wan_id" {
 variable "mandatory_tags" {
   description = "Mandatory bank tags applied to all resources (see modules/tags)."
   type = object({
-    cost_centre         = string
-    owner               = string
-    data_classification = string
-    service_criticality = string
+    costCentre             = string
+    securityClassification = string
+    resourceOwner          = string
+    CMDB_AppID             = string
   })
 }
 

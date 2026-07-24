@@ -20,3 +20,6 @@ terraform.rc
 *.tfplan
 
 # Keep the dependency lock file (.terraform.lock.hcl) tracked.
+
+# Local reference copy of Azure 1.0 repos (not deployed; Privacy Mode / large)
+legacy/

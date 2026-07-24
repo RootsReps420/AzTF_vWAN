@@ -22,13 +22,13 @@ variable "location" {
   default     = "uksouth"
 }
 
-# TODO(deploy): supply real values via tfvars (cost centre, owner, classification, criticality).
+# TODO(deploy): supply real values via tfvars (costCentre, securityClassification, resourceOwner, CMDB_AppID).
 variable "mandatory_tags" {
   description = "Mandatory bank tags applied to all global resources (see modules/tags)."
   type = object({
-    cost_centre         = string
-    owner               = string
-    data_classification = string
-    service_criticality = string
+    costCentre             = string
+    securityClassification = string
+    resourceOwner          = string
+    CMDB_AppID             = string
   })
 }
