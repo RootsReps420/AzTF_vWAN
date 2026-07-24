@@ -15,6 +15,8 @@ Build and migration plans are versioned under [`docs/plans/`](docs/plans/README.
 
 | Path | Purpose |
 |---|---|
+| [`docs/dummies-guide.md`](docs/dummies-guide.md) | **Start here** — simple guide, diagrams, IP tables, placeholder checklist |
+| [`docs/lld-terraform-summary.md`](docs/lld-terraform-summary.md) | Original Terraform LLD (Word) summarised |
 | `environments/int/*` | First live target (DT) — connectivity / mgmt / labs / avd |
 | `environments/prod/*` | Production mirrors |
 | `pipelines/` | AzDo Terraform init/plan/apply |
