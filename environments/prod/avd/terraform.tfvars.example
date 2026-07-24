@@ -1,0 +1,25 @@
+azure_subscription_id = "a6fe8767-8373-4b41-ad17-b4301ca6fcd0" # Known prod gallery/AVD-related GUID — confirm if AVD stack shares this sub
+location              = "uksouth"
+environment           = "prod"
+subscription_code     = "vdi"
+
+# From prod/mgmt output law_id (optional)
+# law_id = "/subscriptions/.../workspaces/..."
+
+default_max_session_limit = 16
+keyvault_unique_id        = "avdprd1" # TODO(deploy): confirm globally unique
+
+# pers_host_pools = {
+#   "01a" = {}
+# }
+
+mandatory_tags = {
+  costCentre             = "CLL411S1XJ"
+  securityClassification = "Limited"
+  resourceOwner          = "Fletcher, Wayne (Colleague ID 0028929)"
+  CMDB_AppID             = "AL17611"
+}
+
+# gallery_role_assignments = {
+#   packer = { role_definition_name = "Contributor", principal_id = "REPLACE-PACKER-MSI" }
+# }

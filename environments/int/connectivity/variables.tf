@@ -38,17 +38,22 @@ variable "mandatory_tags" {
   })
 }
 
-# Address plan from legacy platform params/int/config.yml (verbatim).
-# Virtual hub uses /23 or /24 — legacy hub VNet was /24.
+# Address plan from legacy platform params/int/config.yml (verbatim for Hub01).
+# Virtual hub uses /23 or /24 — classic AzureFirewallSubnet / GatewaySubnet are
+# NOT recreated as VNet subnets under vWAN (AZFW_Hub + ER GW are hub features).
+#
+# Hub01 INT: net_hub_01_vnetAddressSpace = 10.170.245.0/24  (VERIFIED)
+# Hub02: new unsecured hub — NOT in classic estate. 10.170.246.0/24 was PPD Hub01
+#   (ppd dropped); unused in int allocations (within net_superNetCidr 10.170.128.0/17).
+#   Must stay distinct from prod Hub02 (10.170.244.0/24). Network must confirm PPD reclaim.
 variable "hub01_address_prefix" {
   description = "Hub01 (secured) virtual hub address prefix. Legacy net_hub_01_vnetAddressSpace."
   type        = string
   default     = "10.170.245.0/24"
 }
 
-# TODO(deploy): confirm Hub02 CIDR with network team (not in classic hub estate).
 variable "hub02_address_prefix" {
-  description = "Hub02 (unsecured) virtual hub address prefix."
+  description = "Hub02 (unsecured) virtual hub address prefix. Accepted TF default (ex-PPD Hub01); distinct from prod Hub02 10.170.244.0/24."
   type        = string
   default     = "10.170.246.0/24"
 }

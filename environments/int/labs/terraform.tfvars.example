@@ -1,0 +1,20 @@
+azure_subscription_id = "00000000-0000-0000-0000-000000000000" # TODO(deploy): int lab subscription
+location              = "uksouth"
+environment           = "int"
+subscription_code     = "vdi"
+
+hub01_id                  = "/subscriptions/REPLACE/.../virtualHubs/REPLACE-hub01"
+hub02_id                  = "/subscriptions/REPLACE/.../virtualHubs/REPLACE-hub02"
+hub01_firewall_private_ip = "10.0.0.0" # TODO(deploy): from connectivity output hub01_firewall_private_ip (not classic 10.170.245.4 under vWAN)
+
+mandatory_tags = {
+  costCentre             = "CLL411S1XJ"
+  securityClassification = "Limited"
+  resourceOwner          = "Fletcher, Wayne (Colleague ID 0028929)"
+  CMDB_AppID             = "AL17611"
+}
+
+dns_servers    = ["10.19.96.1", "10.19.97.1"]
+enable_fslogix = true
+
+# Defaults in variables.tf are VERIFIED from legacy int config — override only if needed.

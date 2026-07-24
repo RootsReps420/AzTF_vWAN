@@ -1,0 +1,108 @@
+# Reusable Terraform stack job (Phase H)
+# Expects variables: envName, stackName, azureServiceConnection, agentPool,
+#   tfBackendResourceGroup, tfBackendStorageAccount, tfBackendContainer,
+#   terraformVersion (optional)
+
+parameters:
+  - name: envName
+    type: string
+  - name: stackName
+    type: string
+  - name: azureServiceConnection
+    type: string
+  - name: agentPool
+    type: string
+  - name: tfBackendResourceGroup
+    type: string
+  - name: tfBackendStorageAccount
+    type: string
+  - name: tfBackendContainer
+    type: string
+    default: tfstate
+  - name: terraformVersion
+    type: string
+    default: "1.9.0"
+  - name: action
+    type: string
+    default: apply # apply | plan | destroy
+  - name: workingDirectory
+    type: string
+    default: ""
+
+jobs:
+  - job: terraform_${{ parameters.envName }}_${{ parameters.stackName }}
+    displayName: TF ${{ parameters.action }} ${{ parameters.envName }}/${{ parameters.stackName }}
+    pool:
+      name: ${{ parameters.agentPool }}
+    variables:
+      stackDir: ${{ coalesce(parameters.workingDirectory, format('environments/{0}/{1}', parameters.envName, parameters.stackName)) }}
+      stateKey: ${{ parameters.envName }}/${{ parameters.stackName }}.tfstate
+    steps:
+      - checkout: self
+
+      - task: TerraformInstaller@1
+        displayName: Install Terraform
+        inputs:
+          terraformVersion: ${{ parameters.terraformVersion }}
+
+      - task: AzureCLI@2
+        displayName: Terraform init
+        inputs:
+          azureSubscription: ${{ parameters.azureServiceConnection }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          workingDirectory: $(Build.SourcesDirectory)/$(stackDir)
+          inlineScript: |
+            set -euo pipefail
+            terraform init -input=false \
+              -backend-config="resource_group_name=${{ parameters.tfBackendResourceGroup }}" \
+              -backend-config="storage_account_name=${{ parameters.tfBackendStorageAccount }}" \
+              -backend-config="container_name=${{ parameters.tfBackendContainer }}" \
+              -backend-config="key=$(stateKey)"
+
+      - task: AzureCLI@2
+        displayName: Terraform validate
+        inputs:
+          azureSubscription: ${{ parameters.azureServiceConnection }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          workingDirectory: $(Build.SourcesDirectory)/$(stackDir)
+          inlineScript: |
+            set -euo pipefail
+            terraform validate
+
+      - task: AzureCLI@2
+        displayName: Terraform plan
+        condition: and(succeeded(), ne('${{ parameters.action }}', 'destroy'))
+        inputs:
+          azureSubscription: ${{ parameters.azureServiceConnection }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          workingDirectory: $(Build.SourcesDirectory)/$(stackDir)
+          inlineScript: |
+            set -euo pipefail
+            terraform plan -input=false -out=tfplan
+
+      - task: AzureCLI@2
+        displayName: Terraform apply
+        condition: and(succeeded(), eq('${{ parameters.action }}', 'apply'))
+        inputs:
+          azureSubscription: ${{ parameters.azureServiceConnection }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          workingDirectory: $(Build.SourcesDirectory)/$(stackDir)
+          inlineScript: |
+            set -euo pipefail
+            terraform apply -input=false -auto-approve tfplan
+
+      - task: AzureCLI@2
+        displayName: Terraform destroy
+        condition: and(succeeded(), eq('${{ parameters.action }}', 'destroy'))
+        inputs:
+          azureSubscription: ${{ parameters.azureServiceConnection }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          workingDirectory: $(Build.SourcesDirectory)/$(stackDir)
+          inlineScript: |
+            set -euo pipefail
+            terraform destroy -input=false -auto-approve

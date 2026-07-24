@@ -1,6 +1,6 @@
 # Azure 1.0 to Terraform Migration Plan
 
-**Status:** In progress
+**Status:** Scaffold complete (offline validate) — live apply blocked on creds/subs + deferred Hub02 VPN / AZFW Policy
 **Scope:** Port the legacy Azure 1.0 VDI estate (Bicep + PowerShell + AzDo pipelines across vdi-platform, vdi-scripts, vdi-images) onto the new Terraform module set for a two-hub Azure Virtual WAN deploy via GitHub + AzDo.
 
 ## Progress checklist
@@ -9,11 +9,12 @@
 - [x] Phase A: extend naming abbreviations, update tags mandatory keys, legacy->TDA rename map
 - [x] Phase B: per-scope env roots; keep dev-tier split; drop ppd; subscription inventory; start int+prod
 - [x] Phase C: re-platform peering -> vWAN; IPs/VNets/subnets verbatim; baseline firewall-policy only; Hub02 VPN/UDR placeholders
-- [ ] Phase D: LAW/mgmt spoke/KV/alerts APR+UAMI/multi-DCR; FSLogix storage TF; agent VMSS stays PS; flow logs deferred
-- [ ] Phase E: AVD objects; **MSH scaling plans per BU/host pool**; wire registration-token; retire bicep HP path
-- [ ] Phase F: gallery for_each (~50 defs) + RBAC; update Packer/pipeline names; retire gallery bicep
-- [ ] Phase G: de-hardcode owner/cost/CMDB/subscription/tenant/DNS/GUID into tfvars + tags module
-- [ ] Phase H: AzDo Bicep deploy -> TF (platform/lab/gallery/mult-AVD/FSLogix-storage); keep ops PS/Packer; DEFER initiatives+GLB
+- [x] Phase D (scaffold): LAW + mgmt spoke (int+prod); FSLogix storage module in labs; optional mgmt RBAC map; agent VMSS stays PS; APR/UAMI/multi-DCR + flow logs still open
+- [x] Phase E (scaffold): AVD MSH per-BU scaling + decom; PERS personal HP/SP scaffold (`pers_host_pools`); registration tokens; retire bicep HP path at cutover
+- [x] Phase F (scaffold): gallery + `for_each` image definitions; Packer rename checklist (`docs/packer-tda-rename-checklist.md`)
+- [x] Phase G: variable-set doc; bank tags / DNS / GUIDs / KV unique_id / RBAC via tfvars only (`docs/variable-set.md`)
+- [x] Phase H: AzDo TF templates + release pipelines (`pipelines/`); keep ops PS/Packer; DEFER initiatives+GLB
+- [x] IP double-check: Hub01 verified; Hub02 defaults accepted int=`10.170.246.0/24`, prod=`10.170.244.0/24` — see `docs/address-plan-hubs.md`
 
 Ports the legacy estate in `legacy/` onto the new Terraform modules. Based on deep inventory across **seven** legacy checkouts: platform, scripts, images, mult (MSH), pers (lab spokes — verify in Phase 0), initiatives (Azure Policy — deferred), libraries (ops helpers — stays PS). Ignore `platformtest` / `scriptstest` mirrors.
 

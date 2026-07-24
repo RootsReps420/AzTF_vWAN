@@ -37,7 +37,7 @@ Tenant IDs: referenced as AzDo macros (`common_dev_tenantId` / `common_bld_tenan
 |---|---|---|---|
 | connectivity / hub | vWAN hubs, FW, VPN, ER GW | TODO(deploy) | TODO(deploy) |
 | mgmt | LAW, mgmt VNet, agents | TODO(deploy) | TODO(deploy) |
-| avd | Host pools, workspaces, KV, gallery RG | TODO(deploy) — gallery known: `717872a8-…` | TODO(deploy) — gallery: `a6fe8767-…` |
+| avd | Host pools, workspaces, KV, gallery RG | Known gallery GUID usable as start: `717872a8-000f-4990-a35b-0f957a9c7856` — confirm AVD sub | Known gallery: `a6fe8767-8373-4b41-ad17-b4301ca6fcd0` — confirm AVD sub |
 | lab (pers/mult/priv) | Spoke VNets, session hosts, FSLogix | TODO(deploy) per lab | TODO(deploy) per lab |
 | image-build | Packer build sub | TODO(deploy) | TODO(deploy) |
 | `_global` | Shared Virtual WAN | TODO(deploy) — often same as connectivity | TODO(deploy) |

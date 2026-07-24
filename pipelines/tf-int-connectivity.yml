@@ -1,0 +1,48 @@
+# First-cutover convenience pipeline: int connectivity (Hub01 + Hub02 + baseline FWP).
+# Prefer tf-release.yml for other stacks. Requires AzDo vars:
+#   tf.backend.resourceGroup, tf.backend.storageAccount
+
+trigger: none
+
+variables:
+  - name: azureServiceConnection
+    value: SC-R-VDI-INT-C-01
+  - name: agentPool
+    value: uks-int-vdi-mgmt-vss-01
+  - name: tfBackendResourceGroup
+    value: $(tf.backend.resourceGroup)
+  - name: tfBackendStorageAccount
+    value: $(tf.backend.storageAccount)
+  - name: tfBackendContainer
+    value: tfstate
+
+stages:
+  - stage: plan
+    displayName: Plan int/connectivity
+    jobs:
+      - template: templates/terraform-stack.yml
+        parameters:
+          envName: int
+          stackName: connectivity
+          azureServiceConnection: $(azureServiceConnection)
+          agentPool: $(agentPool)
+          tfBackendResourceGroup: $(tfBackendResourceGroup)
+          tfBackendStorageAccount: $(tfBackendStorageAccount)
+          tfBackendContainer: $(tfBackendContainer)
+          action: plan
+
+  - stage: apply
+    displayName: Apply int/connectivity
+    dependsOn: plan
+    condition: succeeded()
+    jobs:
+      - template: templates/terraform-stack.yml
+        parameters:
+          envName: int
+          stackName: connectivity
+          azureServiceConnection: $(azureServiceConnection)
+          agentPool: $(agentPool)
+          tfBackendResourceGroup: $(tfBackendResourceGroup)
+          tfBackendStorageAccount: $(tfBackendStorageAccount)
+          tfBackendContainer: $(tfBackendContainer)
+          action: apply

@@ -1,0 +1,95 @@
+# environments/prod/mgmt — LAW + mgmt spoke (agent VMSS stays PS)
+# CIDRs from legacy platform params/prd/config.yml (VERIFIED).
+
+locals {
+  location = var.location
+  env      = var.environment
+}
+
+module "tags" {
+  source = "../../../modules/tags"
+
+  workload    = "vdi-platform"
+  environment = local.env
+  region      = local.location
+  mandatory   = var.mandatory_tags
+}
+
+module "rg_name" {
+  source = "../../../modules/naming"
+
+  resource_type   = "resource_group"
+  location        = local.location
+  subscription_id = var.subscription_code
+  environment     = local.env
+  description     = "mgmt"
+}
+
+resource "azurerm_resource_group" "mgmt" {
+  name     = module.rg_name.name
+  location = local.location
+  tags     = module.tags.tags
+}
+
+module "management" {
+  source = "../../../modules/platform/management"
+
+  name                = "vdi"
+  resource_group_name = azurerm_resource_group.mgmt.name
+  location            = local.location
+  subscription_id     = var.subscription_code
+  environment         = local.env
+  unique_id           = "01"
+
+  law_retention_in_days           = 30
+  create_data_collection_endpoint = true
+  create_avd_insights_dcr         = true
+
+  # TODO(Phase D extend): APR, alert UAMI, multi-DCR map, custom LAW tables
+  tags = module.tags.tags
+}
+
+# Mgmt spoke — reuse spoke-pers (Hub01 connection, no UDR). Agent VMSS not TF-managed.
+module "spoke_mgmt" {
+  source = "../../../modules/core/spoke-pers"
+
+  name                = "mgmt"
+  resource_group_name = azurerm_resource_group.mgmt.name
+  location            = local.location
+  subscription_id     = var.subscription_code
+  environment         = local.env
+  unique_id           = "01"
+
+  # VERIFIED: net_mgmt_vnetAddressSpace == net_mgmt_subnetAgents == 10.170.241.64/26
+  address_space = var.mgmt_address_space
+  dns_servers   = var.dns_servers
+
+  subnets = {
+    "AgentsSubnet" = {
+      address_prefixes = var.mgmt_address_space
+      security_rules = {
+        "deny-vnet-inbound" = {
+          priority                   = 4000
+          direction                  = "Inbound"
+          access                     = "Deny"
+          protocol                   = "*"
+          source_port_range          = "*"
+          destination_port_range     = "*"
+          source_address_prefix      = "VirtualNetwork"
+          destination_address_prefix = "VirtualNetwork"
+        }
+      }
+    }
+  }
+
+  hub01_id = var.hub01_id
+  tags     = module.tags.tags
+}
+
+resource "azurerm_role_assignment" "mgmt" {
+  for_each = var.mgmt_role_assignments
+
+  scope                = each.value.scope
+  role_definition_name = each.value.role_definition_name
+  principal_id         = each.value.principal_id
+}

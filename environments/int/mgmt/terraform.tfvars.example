@@ -1,0 +1,17 @@
+azure_subscription_id = "00000000-0000-0000-0000-000000000000" # TODO(deploy): int mgmt subscription
+location              = "uksouth"
+environment           = "int"
+subscription_code     = "mgmt"
+
+hub01_id = "/subscriptions/REPLACE/resourceGroups/REPLACE/providers/Microsoft.Network/virtualHubs/REPLACE"
+
+mandatory_tags = {
+  costCentre             = "CLL411S1XJ"
+  securityClassification = "Limited"
+  resourceOwner          = "Fletcher, Wayne (Colleague ID 0028929)"
+  CMDB_AppID             = "AL17611"
+}
+
+# VERIFIED: legacy net_mgmt_vnetAddressSpace / net_mgmt_subnetAgents
+mgmt_address_space = ["10.170.139.192/26"]
+dns_servers        = ["10.19.96.1", "10.19.97.1"]
