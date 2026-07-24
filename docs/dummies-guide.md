@@ -360,14 +360,14 @@ Values below are **defaults in code** or **tfvars.example**. Anything marked ⚠
 ### `_global`
 
 
-| Item                           | Current                                                              |
-| ------------------------------ | -------------------------------------------------------------------- |
-| `location`                     | `uksouth`                                                            |
-| `environment` (naming segment) | `prd`                                                                |
-| `subscription_code`            | `conn`                                                               |
-| Creates                        | 1× Virtual WAN (Standard)                                            |
-| `azure_subscription_id`        | ⚠️ placeholder zeros                                                 |
-| `mandatory_tags`               | ⚠️ must supply (example: CLL411S1XJ / Limited / Fletcher… / AL17611) |
+| Item                           | Current                                                                |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| `location`                     | `uksouth`                                                              |
+| `environment` (naming segment) | `prd`                                                                  |
+| `subscription_code`            | `conn`                                                                 |
+| Creates                        | 1× Virtual WAN (Standard)                                              |
+| `azure_subscription_id`        | ⚠️ placeholder zeros                                                   |
+| `mandatory_tags`               | ⚠️ must supply (example: Classification, CMDB ID, Resource Owner, etc) |
 
 
 
