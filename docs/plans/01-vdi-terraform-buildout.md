@@ -49,7 +49,7 @@ TDA naming/tagging standards, cross-referenced with what already existed in the 
 - Mandatory keys as documented placeholders; non-empty validation.
 
 ### Refactor existing modules
-- `avd/hostpool` -> naming (`vdhp`) + tags + optional LAW diagnostics.
+- `avd/hostpool` -> naming (`vdh`) + tags + optional LAW diagnostics.
 - `platform/hub-secured` -> naming + LAW diagnostics.
 - `platform/vwan` -> verified against new order.
 
