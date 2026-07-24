@@ -382,7 +382,7 @@ Values below are **defaults in code** or **tfvars.example**. Anything marked ⚠
 | Hub01 prefix            | `10.170.245.0/24`                              | `10.170.247.0/24` |
 | Hub02 prefix            | `10.170.246.0/24`                              | `10.170.244.0/24` |
 | DNS                     | `10.19.96.1`, `10.19.97.1`                     | same              |
-| Firewall policy rules   | **empty** (stub so AZFW can attach)            | same              |
+| Firewall policy rules   | **empty** (pending implementation)             | same              |
 | ER circuit peering      | `null` (gateway only)                          | same              |
 | Hub02 VPN               | gateway scaffold only — **no site/connection** | same              |
 | `virtual_wan_id`        | ⚠️ from `_global` output                       | ⚠️                |
